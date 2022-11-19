@@ -4,32 +4,27 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mysql from 'mysql';
 
-
+import router from "./Routes_sql/Routes.js";
 const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use('/api',router);
 
-const connection = mysql.createConnection({
+export const mysqlConnection = mysql.createConnection({
   host:'localhost',
   user:'root',
   password:'chintu',
-  database:'face_recog_db',
+  database:'face2',
   port:3307 
 })
 
-connection.connect((err)=>{
+mysqlConnection.connect((err)=>{
   if(err){
     console.log(err)
   }else{
     console.log("successfull connection")
   }
-})
-
-
-// routes
-app.get('/students',(req,res)=>{
-  
 })
 
 
