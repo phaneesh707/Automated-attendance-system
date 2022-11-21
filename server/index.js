@@ -15,12 +15,16 @@ const URL = "mongodb+srv://chintu:chintu@cluster0.hywdppq.mongodb.net/test";
 const PORT = 5000;
 app.get('/', (req, res) => {
 
+  console.log("hello");
   var spn = child.spawn;
   var pro = spn("python", ["main1.py"]);
-
+  console.log("hello");
   var data1;
+  console.log("hello");
   pro.stdout.on("data", function (data) {
+    console.log("hello");
     data1 = data.toString();
+    console.log("hello--------");
     console.log(data1);
     res.send(data1);
   });
