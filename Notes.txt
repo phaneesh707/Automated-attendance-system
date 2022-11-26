@@ -1,0 +1,120 @@
+: Cannot store topic offset?
+    - Can make a file, which contains the offset. Which makes the broker stateless
+
+Kafka broekrs are stateless
+- Hence need zookeper
+    - Also performs leader election
+    - Notifies pub/sub of failure of a broker
+        : hence cannot have a strict loadbalancer, can only use round robin method
+        for ease of distribution
+    - Updates offset 
+
+Q: Why is a leader required?
+
+Q: Should we follow data format?
+
+If key is provided, all the items go to a specific partition only 
+    - Same seed value?
+
+Replication
+- Partition level replication. not server level 
+- A broker can be a leader in only 
+
+
+Leader?
+
+System level replication, results in large data loss 
+
+-------------------------------------------------------------------------------
+- Topics => Log => Durable
+- Retention period can be defined
+
+Partition?
+- Can exist on different partition 
+- Which to write where? 
+    - no key, round robin 
+    - hash key % number of partition 
+    - order maintained
+
+- Broker: manage set of partition
+    - Manage replication of partitions
+    - r&w 
+
+- Replication?
+    - Follower replica 
+    - writing data happens to the leader 
+    
+
+- Consumer reads from all the partitions?
+
+zookeper????
+- Metadata management
+
+
+-------------------------------CONCLUSIONS---------------------------------------------------------------
+- Producer contacts the zk with
+        :topic
+    - zk tells:
+        -  the port of Leader partition (WRITE ONLY TO LEADER)
+- Producer writes the data to the leader partition, with the received PORT
+- Since, each broker is stateless, the data is just written to the partition
+- After write, broker updates the zk with the particular sequence number
+    - ISR updates the logs with the specific value
+
+
+
+- Consumer, requests data with a particular topic
+- ZK tells if the data is updated
+- ZK then just asks the broker for the data
+
+
+- If the broker fails, zk will select from the most recent SEQ update
+
+Operations -----------------------------------
+
+1. Zk: FLASK API/FASTAPI
+
+    - maintain a collection of brokers: connection management
+    - maintain state:
+        {topicName:seq} -> used by prod  & Consumer
+    - maintain leaders+replicas:
+        {topicName:leaderBroker}
+        {topicName:[replica]}
+        - randomly select a broker, to create a new topic
+    - receives heartbeat from the broker
+        - selects leader with most recent seq 
+
+2. Broker: API but JOB 
+
+    if leader:
+        - take the topic and message, and write it to buffer.
+            - returns number of lines written to buffer to Producer
+            - wait for ack
+            - if no ack, message received again:
+                write message to buffer
+                repeat
+            - else
+                - write to file
+                - returns number of lines written to buffer to ZK
+        - Write to replicas
+    else:
+        - when zk sends *notification*
+        - replica asks for new message to the leader
+            - gets the messages in sync
+    - pings the zk(heartbeat)
+
+
+3. Producer: Class instance
+
+    - contact zk  with topic
+        - zk responds with a PORT/address
+    - contacts the given PORT(broker) 
+        - maintains number of lines sent::
+        - writes to broker
+            - broker responds with number of lines written
+            - if equal:
+                returns ack
+            - writes again
+
+4. Consumer: Class instance
+    - POLL the zk, for updates     
