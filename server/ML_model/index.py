@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, json, session
 from flask_restful import Api, Resource
 from test import send
-
+from main1 import find_target_face
 app = Flask(__name__)
 api = Api(app)
 
@@ -21,8 +21,10 @@ api = Api(app)
 
 class Test(Resource):
     def get(self):
+
+        data = (find_target_face())
         print("Testing route called")
-        return {'data': 'message reached'}
+        return jsonify({'data': data})
 
 
 api.add_resource(Test, "/attendance")

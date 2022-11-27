@@ -9,26 +9,27 @@ const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-app.use('/api',router);
+app.use('/api', router);
 
 export const mysqlConnection = mysql.createConnection({
-  host:'localhost',
-  user:'root',
-  password:'chintu',
-  database:'face2',
-  port:3307 
+  host: 'localhost',
+  user: 'root',
+  password: '1925',
+  database: 'face2',
+  // port: 3306,
+  "dialect": "mysql"
 })
 
-mysqlConnection.connect((err)=>{
-  if(err){
+mysqlConnection.connect((err) => {
+  if (err) {
     console.log(err)
-  }else{
+  } else {
     console.log("successfull connection")
   }
 })
 
 
 
-app.listen(5000,()=>{
+app.listen(5000, () => {
   console.log(`server running on port ${5000}`)
 })
