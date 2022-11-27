@@ -1,7 +1,7 @@
 import express from 'express'
 import expressAsyncHandler from 'express-async-handler';
 import { mysqlConnection } from '../index.js';
-
+import axios from "axios"
 
 const router = express.Router();
 
@@ -14,9 +14,11 @@ router.get('/student/viewAttendance',expressAsyncHandler(async(req,res)=>{
     const {SRN,datee} = req.body;
     const qry = `SELECT DISTINCT teaches.course_id,attendance.is_present FROM attendance join teaches on attendance.teacher_id = teaches.teacher_id where attendance.curr_date='${datee}' and attendance.SRN='${SRN}';`;
     mysqlConnection.query(qry,(err,result)=>{
-        if(err) throw err;
+        if(err){
+            res.send({message:err})
+        }
         else{
-            res.status(200).send(result);   
+            res.status(200).send({message:result});   
         }
         
     })
@@ -30,17 +32,19 @@ router.post('/student/login',expressAsyncHandler(async(req,res)=>{
     
     const qry = `SELECT password from student where SRN ='${SRN}';`;
     mysqlConnection.query(qry,(err,result)=>{
-        if(err) throw err;
+        if(err){
+            res.status(500).send({message:err})
+        }
         else if(result.length == 0){
-            res.status(404);
-            throw new Error("student not found");
+            res.status(404).send({message:"student not found"})
+            
         }    
         else{
-            console.log(result[0].password);
+            // console.log(result[0].password);
             if(password == result[0].password){
-                res.status(200).send("Login success");
+                res.status(200).send({message:"Login success"});
             }else{
-                res.status(401).send({error:"Invalid credentials"});
+                res.status(401).send({message:"Invalid credentials"});
                 
             }
         }
@@ -59,9 +63,11 @@ router.get(
     const teacher_id = req.params.id;
     const qry = `SELECT section_id from teaches where teacher_id = '${teacher_id}';`;
     mysqlConnection.query(qry, (err, result) => {
-      if (err) throw err;
+      if (err){
+        res.send({message:err})
+      }
       else {
-        res.status(200).send(result);
+        res.status(200).send({message:result});
       }
     });
   })
@@ -70,7 +76,7 @@ router.get(
 
 // 2. view attendance of all the students of a particular class under a teacher on a given date
 router.get('/teacher/viewAttendance',expressAsyncHandler(async (req,res)=>{
-    const {section_id,teacher_id,datee} = req.body;
+    const {section_id,teacher_id,datee} = req.query;
     const qry = `SELECT student.SRN,attendance.is_present from student natural join attendance where section_id = '${section_id}' and teacher_id ='${teacher_id}' and curr_date='${datee}';`;
     mysqlConnection.query(qry, (err, result) => {
       if (err) {
@@ -90,17 +96,18 @@ router.post('/teacher/login',expressAsyncHandler(async(req,res)=>{
     
     const qry = `SELECT password from teacher where teacher_id ='${teacher_id}';`;
     mysqlConnection.query(qry,(err,result)=>{
-        if(err) throw err;
+        if(err){
+            res.send({message:err})
+        }
         else if(result.length == 0){
-            res.status(404);
-            throw new Error("teacher not found");
+            res.status(404).send({ message: "teacher not found" });
         }    
         else{
-            console.log(result[0].password);
+            // console.log(result[0].password);
             if(password == result[0].password){
-                res.status(200).send("Login success");
+                res.status(200).send({message:"Login success"});
             }else{
-                res.status(401).send({error:"Invalid credentials"});
+                res.status(401).send({message:"Invalid credentials"});
                 
             }
         }
@@ -109,11 +116,19 @@ router.post('/teacher/login',expressAsyncHandler(async(req,res)=>{
 
 
 
-// 4. update attendance of student
-
-
-// 5.ml model
-
+// 4. get data from ML model 
+router.get('/teacher/getData',expressAsyncHandler(async (req,res)=>{
+    const {pic} = req.query;
+    axios.get({
+        method:"get",
+        url:"http://127.0.0.1/attendance",
+        data:pic
+    }).then((res)=>{
+        console.log(res.data);
+    }).catch(err=>{
+        console.log(err);
+    })
+}))
 
 
 

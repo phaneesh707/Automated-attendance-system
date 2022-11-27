@@ -2,7 +2,7 @@ create database face2;
 use face2;
 
 create table student(
-	SRN varchar(13),
+	SRN varchar(12),
     name varchar(30),
     email varchar(40),
     password varchar(40),
@@ -36,11 +36,6 @@ create table section(
 );
 
 
-create table teaches(
-	section_id varchar(10),
-    teacher_id varchar(12)
-);
-
 create table Attendance(
 	curr_date date,
     is_present bool,
@@ -52,6 +47,12 @@ create table Attendance(
     primary key(attend_id,SRN,teacher_id)
 );
 
+
+
+create table teaches(
+	section_id varchar(10),
+    teacher_id varchar(12)
+);
 -- -----------------------------------------------------------------------------------------------
 -- adding primary key constraints
 alter table student add constraint primary key(SRN);
@@ -144,6 +145,9 @@ insert into attendance (curr_date,is_present,SRN,teacher_id) values('2022-11-18'
 insert into attendance (curr_date,is_present,SRN,teacher_id) values('2022-11-18',1,'PES1UG20CS544','PES002');
 select * from attendance;
 
+SELECT * FROM attendance join teaches on attendance.teacher_id = teaches.teacher_id where attendance.curr_date='2022-11-17' and attendance.SRN='PES1UG20CS584';
+SELECT distinct * from student natural join attendance where section_id = 'CSE3J' and teacher_id ='PES001' and curr_date='2022-11-17';
+select * from attendance;
 
 
 
