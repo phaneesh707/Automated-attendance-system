@@ -1,4 +1,3 @@
-
 import face_recognition as fr
 import cv2 as cv
 import os
@@ -40,25 +39,7 @@ def find_target_face():
         else:
             print("No faces found")
     # people_found_dict = dict.fromkeys(people_found, "1")
-
+    #printlist(set(people_found))
     return list(set(people_found))
 
-# def markAttendance(name):
-#     with open('Attendance.csv', 'r+') as f:
-#         myDataList = f.readlines()
-#         nameList = []
-#         for line in myDataList:
-#             entry = line.split(',')
-#             nameList.append(entry[0])
-#             if name not in nameList:
-#                 now = datetime.now()
-#                 dtString = now.strftime('%H:%M:%S')
-#                 f.writelines(f'\n{name},{dtString}')
-
-
 print(find_target_face())
-# df=pd.DataFrame(find_target_face)
-# df.to_csv("D:/Shristi/PES/SEM5/SE/Face-Recognition-Attendance-Projects-main/server/Attendance.csv")
-# people_present=find_target_face()
-# for name in people_present:
-#     markAttendance(name)
