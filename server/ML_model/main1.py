@@ -5,10 +5,10 @@ import os
 from datetime import datetime
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-
+import json
 # Tk().withdraw()
 # load_image = askopenfilename()
-target_image = fr.load_image_file("1.jpg")
+target_image = fr.load_image_file("1.jpeg")
 target_encoding = fr.face_encodings(target_image)
 
 
@@ -39,8 +39,9 @@ def find_target_face():
                 face_number += 1
         else:
             print("No faces found")
-    people_found_dict = dict.fromkeys(people_found, "1")
-    return people_found_dict
+    # people_found_dict = dict.fromkeys(people_found, "1")
+
+    return list(set(people_found))
 
 # def markAttendance(name):
 #     with open('Attendance.csv', 'r+') as f:

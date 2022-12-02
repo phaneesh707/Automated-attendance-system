@@ -14,10 +14,18 @@ const Home = () => {
         router('/teacher/login');
     }
     return (
-        <div className="grid grid-cols-2 gap-5">
-            <div onClick={studentLogin} className="bg-white text-3xl w-1/3 hover:cursor-pointer mx-auto font-semibold py-12 rounded-lg">Student</div>
-            <div onClick={teacherLogin} className="bg-white text-3xl w-1/3 hover:cursor-pointer mx-auto font-semibold py-12 rounded-lg">Teacher</div>
+        <div>
+
+            <div>
+                <h1 className='text-4xl uppercase font-bold pt-10'>Face Recognition Attendance System</h1>
+            </div>
+            <div className="flex mt-32 justify-evenly items-center">
+                <div onClick={studentLogin} className="bg-white my-10 text-3xl w-1/4 hover:cursor-pointer font-semibold py-14 uppercase  rounded-lg">Student</div>
+                <div onClick={teacherLogin} className="bg-white my-10 text-3xl w-1/4 hover:cursor-pointer font-semibold py-14 uppercase  rounded-lg">Teacher</div>
+            </div>
+
         </div>
+
     );
 }
 

@@ -16,15 +16,11 @@ const StudentLogin = () => {
                 console.log(res.data);
                 toast.success("Login Successfull");
                 router(`/teacher/home/${creds.teacher_id}`);
-            }
-            )
+            })
             .catch((err) => {
                 console.log(err);
                 toast.error("Login Failed");
-            }
-            )
-
-
+            })
     }
 
     return (

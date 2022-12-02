@@ -24,6 +24,8 @@ class Test(Resource):
 
         data = (find_target_face())
         print("Testing route called")
+        print(data)
+
         return jsonify({'data': data})
 
 

@@ -1,50 +1,50 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import Webcam from 'react-webcam'
+import axios from "axios"
+import React, { useEffect, useState } from 'react'
+
+const Filesend = () => {
+    const [file, setFile] = useState();
+    const [name, setName] = useState()
+
+    const handleClick = () => {
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("file", file);
+        // const url = "http://localhost:5000/api/teacher/sendImg";
+        axios
+            .post("http://localhost:5000/api/teacher/sendImg", formData)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
 
 
 
-const TakeAtt = () => {
+    }
 
 
-    const navigate = useNavigate();
-    const [url, setUrl] = useState(null);
-    const webcamRef = React.useRef(null);
-    const capture = React.useCallback(() => {
-        const imageSrc = webcamRef.current.getScreenshot();
-        setUrl(imageSrc);
-    }, [webcamRef]);
-
-    console.log(url);
-    const videoConstraints = {
-        width: 1280,
-        height: 720,
-        facingMode: "user",
-    };
     return (
-        <>
-            <Webcam
-                audio={false}
-                height={720}
-                ref={webcamRef}
-                screenshotFormat="image/jpeg"
-                width={1280}
-                videoConstraints={videoConstraints}
+        <div>
+            {/* <form enctype="multipart/form-data"> */}
+            <input
+                type="text"
+                onChange={(e) => {
+                    setName(e.target.value);
+                }}
             />
-            <button onClick={capture}>Capture photo</button>
-            <div className='caputerdImg'>
-                {url && (
-                    <div>
-                        Verify the Image-
-                        <img src={url} alt="selfi" />
-                        <button onClick={() => navigate(0)}>Generate Attandence</button>
-                    </div>
-                )}
-            </div>
-        </>
+            <input
+                type="file"
+                accept=".jpg"
+                onChange={(e) => {
+                    setFile(e.target.files[0]);
+                }}
+                className="my-10"
+            />
+            <button className="px-7 py-2 bg-blue-900 text-white font-semibold rounded-lg" onClick={handleClick}>Send file</button>
+
+        </div>
     );
+}
 
-};
-
-export default TakeAtt
+export default Filesend

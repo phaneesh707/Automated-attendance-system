@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 //import useparams
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import Webcam from "../components/Webcam";
+import Filesend from "../components/Webcam";
+import { toast } from "react-toastify";
+// import Webcam from "../components/Webcam";
 const TeacherHome = () => {
     const { id } = useParams();
     const [data, setData] = useState([]);
@@ -54,14 +56,37 @@ const TeacherHome = () => {
     const takeAtt = (e) => {
         e.preventDefault();
         setTakeAttendance(true);
+        setAtt([]);
+    }
+
+    const handleTest = (e) => {
+        e.preventDefault();
+
+        axios.get(`http://localhost:5000/api/teacher/getData?datee=${date}&teacher_id=${id}`)
+            .then((res) => {
+                console.log(res.data);
+                if (res.code === 200) {
+                    toast.success(res.data.message);
+                }
+            })
+            .catch((err) => {
+
+                console.log(err);
+            }
+            )
+
     }
     console.log(date, classe, id);
     return (
         <div>
-            <h1>Classes</h1>
-            <input className="block mx-auto rounded-lg my-3 px-3" type="date" onChange={(e) => {
-                setDate(e.target.value);
-            }} />
+            <h1 className="py-10 text-3xl uppercase font-bold">Classes</h1>
+            <div className="flex items-center justify-center">
+
+                <input className="block mx-auto rounded-lg my-3 px-3" type="date" onChange={(e) => {
+                    setDate(e.target.value);
+                }} />
+            </div>
+
             <select onChange={handleClassSelection} className="block mx-auto rounded-lg my-3 px-3">
                 <option value="">Select Classes Here</option>
                 {
@@ -93,10 +118,12 @@ const TeacherHome = () => {
             }
 
             {takeAttendance &&
-                <div>
-                    <Webcam />
+                <div className="my-10">
+                    <Filesend />
 
                 </div>}
+            <button className="px-7 py-2 bg-blue-900 text-white font-semibold rounded-lg" onClick={handleTest}>TEST</button>
+            {/* </form> */}
         </div>
     );
 }
