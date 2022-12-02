@@ -1,5 +1,5 @@
 import sys
-print('hell world')
+print('hello world')
 
 
 def send(something):

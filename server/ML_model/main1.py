@@ -57,6 +57,7 @@ def find_target_face():
 
 
 print(find_target_face())
+#trying to get a dataframe with the names followed by present/absent
 # df=pd.DataFrame(find_target_face)
 # df.to_csv("D:/Shristi/PES/SEM5/SE/Face-Recognition-Attendance-Projects-main/server/Attendance.csv")
 # people_present=find_target_face()

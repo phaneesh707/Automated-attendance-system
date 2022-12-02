@@ -4,7 +4,7 @@ use face2;
 create table student(
 	SRN varchar(12),
     name varchar(30),
-    email varchar(40),
+    email varchar(50),
     password varchar(40),
     DOB date,
     face_pic varbinary(8000)
@@ -29,7 +29,7 @@ create table admin(
 
 
 create table section(
-	section_id varchar(10),
+	section_id varchar(15),
     section_name varchar(30),
     dept varchar(30),
     batch_year int
@@ -40,8 +40,8 @@ create table Attendance(
 	curr_date date,
     is_present bool,
     attend_id int auto_increment,
-    SRN varchar(13),
-    teacher_id varchar(12),
+    SRN varchar(15),
+    teacher_id varchar(15),
 	foreign key (SRN) references student(SRN),
     foreign key (teacher_id) references teacher(teacher_id),
     primary key(attend_id,SRN,teacher_id)
